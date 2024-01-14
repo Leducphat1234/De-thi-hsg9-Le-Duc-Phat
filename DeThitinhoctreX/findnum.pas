@@ -20,26 +20,31 @@ procedure findRange(n, x: longword); // n la so mu, x la co so dang x*10**n
 var i, j: longword;
 begin
     for i := 0 to 9 do
+    begin
         Guess := Num(x*10**(n+1) +  i*10**n);
-        if guess > 0 then findRange(n-1, i-1)
+        if guess > 0 then
+            findRange(n-1, i-1)
         else if guess = 0 then
         begin
             for j := 1 to MAX_AB-1 do
             begin
-                if Num(x*10**(n+1) +  i*10**n + i) > 0 then
-                    b := x*10**(n+1) +  i*10**n + i-1;
-                if Num(x*10**(n+1) +  i*10**n - i) < 0 then
-                    a := x*10**(n+1) +  i*10**n - i+1;
+                if Num(x*10**(n+1) +  i*10**n + j) > 0 then
+                    b := x*10**(n+1) +  i*10**n + j - 1;
+                if Num(x*10**(n+1) +  i*10**n - j) < 0 then
+                    a := x*10**(n+1) +  i*10**n - j + 1;
+                writeln('*a = ', a);
+                writeln('*b = ', b);
             end;
 
-            exit;
+            break;
         end;
+    end;
 end;
-procedure games_simulator(var a, b: longword);
+procedure games_simulator(var ac, bc: longword);
 begin
     randomize;
-    a := random(MAXAB);
-    b := a - random(MAX_AB);
+    ac := random(MAXAB);
+    bc := ac - random(MAX_AB);
 end;
 
 
