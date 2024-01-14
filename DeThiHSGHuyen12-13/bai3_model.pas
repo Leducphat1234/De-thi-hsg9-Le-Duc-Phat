@@ -2,8 +2,7 @@ program AllUniquePermutationsSorted;
 
 var
     wd, temp, sortedWord: string;
-    i, j, uniqueCount: integer;
-    isUnique: boolean;
+    i, j: integer;
     permutations: array of string;
     permutationCount: integer;
 
