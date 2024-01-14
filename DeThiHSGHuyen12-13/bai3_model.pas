@@ -4,6 +4,8 @@ var
     wd, temp, sortedWord: string;
     i, j, uniqueCount: integer;
     isUnique: boolean;
+    permutations: array of string;
+    permutationCount: integer;
 
 procedure Swap(var a, b: char);
 var
@@ -20,10 +22,10 @@ var
 begin
     if left = right then
     begin
-        if temp <> wd then // Kiểm tra xem hoán vị có bằng word hay không
+        if temp <> wd then
         begin
-            writeln(temp);
-            Inc(uniqueCount);
+            permutations[permutationCount] := temp;
+            Inc(permutationCount);
         end;
     end
     else
@@ -40,11 +42,41 @@ begin
     end;
 end;
 
-procedure SortAndPrintPermutations(wd: string);
+procedure SortPermutations();
 var
     i, j: integer;
+    temp: string;
 begin
-    uniqueCount := 0;
+    for i := 0 to permutationCount - 1 do
+    begin
+        for j := i + 1 to permutationCount - 1 do
+        begin
+            if permutations[i] > permutations[j] then
+            begin
+                temp := permutations[i];
+                permutations[i] := permutations[j];
+                permutations[j] := temp;
+            end;
+        end;
+    end;
+end;
+
+procedure PrintPermutations();
+var
+    i: integer;
+begin
+    writeln('Các hoán vị theo thứ tự từ điển:');
+    for i := 0 to permutationCount - 1 do
+    begin
+        writeln(permutations[i]);
+    end;
+    writeln('Tổng số hoán vị: ', permutationCount);
+end;
+
+procedure SortAndPrintPermutations(wd: string);
+begin
+    permutationCount := 0;
+    SetLength(permutations, 24);
     sortedWord := wd;
     for i := 1 to Length(sortedWord) - 1 do
     begin
@@ -67,13 +99,14 @@ begin
             Inc(i);
         end;
 
-        if Pos(wd, temp) = 0 then // Kiểm tra xem hoán vị có chứa từ ban đầu hay không
+        if Pos(wd, temp) = 0 then
         begin
             Permute(1, Length(temp));
         end;
     until i > Length(sortedWord);
 
-    writeln('Tổng số hoán vị: ', uniqueCount);
+    SortPermutations();
+    PrintPermutations();
 end;
 
 begin
