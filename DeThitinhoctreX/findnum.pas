@@ -1,14 +1,14 @@
 uses {games,} math, SysUtils; // dung random tao ham giong games
 var
     a,b: longword;
-    guess: byte;
+    guess: shortint;
     A_FROM_COM, B_FROM_COM: longword;
     Howtimes: longint = 0;
 const
     MAXAB = 1000000;
     MAX_AB = 100;
 
-function Num(n: longword): byte;
+function Num(n: longword): shortint;
 begin
     Howtimes := Howtimes + 1;
     if (n >= A_FROM_COM) and (n <= B_FROM_COM) then exit(0)
