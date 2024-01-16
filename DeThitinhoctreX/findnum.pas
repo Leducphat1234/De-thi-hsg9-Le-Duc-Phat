@@ -8,6 +8,13 @@ const
     MAXAB = 1000000;
     MAX_AB = 100;
 
+procedure games_simulator(var a_com, b_com: longword);
+begin
+    randomize;
+    a_com := random(MAXAB);
+    b_com := a_com - random(MAX_AB);
+end;
+
 function Num(n: longword): shortint;
 begin
     Howtimes := Howtimes + 1;
@@ -40,13 +47,6 @@ begin
         end;
     end;
 end;
-procedure games_simulator(var ac, bc: longword);
-begin
-    randomize;
-    ac := random(MAXAB);
-    bc := ac - random(MAX_AB);
-end;
-
 
 begin
     games_simulator(A_FROM_COM, B_FROM_COM);
