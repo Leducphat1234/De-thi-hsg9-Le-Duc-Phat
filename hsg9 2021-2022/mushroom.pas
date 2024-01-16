@@ -23,7 +23,7 @@ begin
                 begin
                     S := S + del_A[k];
                 end;
-                if (mx < S) and (S < M) then mx := S;
+                if (mx < S) and (S <= M) then mx := S;
                 del_A := A;
             end;
     writeln(fo, mx);
