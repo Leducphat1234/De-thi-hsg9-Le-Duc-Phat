@@ -20,9 +20,7 @@ begin
                 delete(del_A, j, i);
                 S := 0;
                 for k := 0 to length(del_A)-1 do
-                begin
                     S := S + del_A[k];
-                end;
                 if (mx < S) and (S <= M) then mx := S;
                 del_A := A;
             end;
