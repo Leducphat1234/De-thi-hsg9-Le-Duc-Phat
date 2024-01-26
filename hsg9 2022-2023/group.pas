@@ -4,7 +4,7 @@ type vector = array of byte;
      Dvector = array of array of byte;
 var fi, fo: text;
     n, _, i, j: longword;
-    A: vector;
+    A, list: vector;
     Groups: Dvector;
 procedure swap(var a, b: byte);
 var temp: byte;
@@ -13,7 +13,7 @@ begin
     a := b;
     b := temp;
 end;
-procedure AddE(var A: vector; n: byte);
+procedure AddE(var A: vector; n: longword);
 begin
     setlength(A, length(A)+1);
     A[length(A)-1] := n;
@@ -32,6 +32,32 @@ begin
         for j := i+1 to l-1 do
             if A[i] > A[j] then swap(A[i], A[j]);
 end;
+function MaxIdx(const i: longword; const A: vector): longword;
+var j: longword;
+    S, mx: byte;
+begin
+    MaxIdx := i;
+    mx := A[i];
+    for j := i+1 to length(A)-1 do
+    begin
+        S := A[i] + A[j];
+        if (S > mx) and (S <= MAXIMUM) then
+        begin
+            MaxIdx := j;
+            mx := S;
+        end;
+    end;
+    AddE(list, MaxIdx);
+end;
+function IsIn(var A: vector; n: byte): boolean;
+var k: longword;
+begin
+    if length(A) = 0 then exit(false);
+    for k := 0 to length(A)-1 do
+        if n = A[k] then exit(true);
+    exit(false);
+end;
+
 procedure Merge(var G: vector; var Groups: Dvector);
 var curGroup: vector;
     S, i: longword;
@@ -41,31 +67,41 @@ begin
     S := 0;
     for i := 0 to length(G) do
     begin
-        if i = length(G) then
+        if not IsIn(list, i) then
         begin
-            AddE(Groups, CurGroup);
-            break;
-        end;
-        if S + G[i] <= MAXIMUM then
-        begin
-            S := S + G[i];
-            AddE(curGroup, G[i]);
+            if i = length(G) then
+            begin
+                AddE(Groups, CurGroup);
+                break;
+            end;
+            if S + G[i] = MAXIMUM then
+            begin
+                S := S + G[i];
+                AddE(curGroup, G[i]);
+            end
+            else if S + G[i] < MAXIMUM then
+            begin
+                S := S + G[MaxIdx(i, G)];
+                AddE(curGroup, G[i]);
+                AddE(curGroup, G[MaxIdx(i, G)]);
+            end
+            else
+            begin
+                AddE(Groups, curGroup);
+                S := G[i];
+                setlength(curGroup, 1);
+                curGroup[0] := G[i];
+            end;
         end
-        else
-        begin
-            AddE(Groups, curGroup);
-            S := G[i];
-            setlength(curGroup, 1);
-            curGroup[0] := G[i];
-        end;
+        else continue;
     end;
 
-    {for i := 0 to length(Groups)-1 do
+    for i := 0 to length(Groups)-1 do
     begin
         for j := 0 to length(Groups[i])-1 do
             write(format('%d/%d/%d ', [Groups[i][j], i, j]));
         writeln;
-    end;}
+    end;
 end;
 
 BEGIN
@@ -75,6 +111,7 @@ BEGIN
     setlength(A, n);
     for _ := 0 to n-1 do readln(fi, A[_]);
 
+    setlength(list, 0);
     Merge(A, Groups);
     //writeln('Length: ', length(Groups));
     writeln(fo, length(Groups));
