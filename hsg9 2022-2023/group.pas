@@ -60,7 +60,7 @@ end;
 
 procedure Merge(var G: vector; var Groups: Dvector);
 var curGroup: vector;
-    S, i: longword;
+    S, i, m: longword;
 begin
     setlength(Groups, 0);
     sort(G);
@@ -74,16 +74,12 @@ begin
                 AddE(Groups, CurGroup);
                 break;
             end;
-            if S + G[i] = MAXIMUM then
+            if S + G[i] <= MAXIMUM then
             begin
-                S := S + G[i];
+                m := MaxIdx(i, G)
+                S := S + G[m];
                 AddE(curGroup, G[i]);
-            end
-            else if S + G[i] < MAXIMUM then
-            begin
-                S := S + G[MaxIdx(i, G)];
-                AddE(curGroup, G[i]);
-                AddE(curGroup, G[MaxIdx(i, G)]);
+                AddE(curGroup, G[m]);
             end
             else
             begin
