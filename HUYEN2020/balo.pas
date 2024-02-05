@@ -1,30 +1,38 @@
-uses crt, math;
-var n,i: integer;
-    fi,fo: text;
-    a,c,ma,S: cardinal;
-    isfirsttime: boolean = true;
-begin
-    assign(fi, './balo.inp'); reset(fi);
-    assign(fo, './balo.out'); rewrite(fo);
-    readln(fi, n);
-    S := 0;
+uses SysUtils;
+type vector = array of longword;
+var _, n, S, mxA, mxC, i, j, k: longword;
+    A, C: vector;
+
+BEGIN
+    assign(input, 'balo.inp'); reset(input);
+    assign(output, 'balo.out'); rewrite(output);
+    readln(n);
+    setlength(A, n);
+    setlength(C, n);
+    for _ := 0 to n-1 do readln(A[_], C[_]);
+
+    mxC := C[i];
     for i := 0 to n-1 do
     begin
-        readln(fi, a, c);
-        if isfirsttime then
+        for k := 0 to n-1-i do
         begin
-            ma := a;
-            S := c;
-            isfirsttime := false;
-        end;
-        if ma <= a then
-        begin
-            ma := a;
-            if S < c then
-                S := c;
+            mxA := A[i];
+            S := C[i];
+            j := i+1 + k;
+            while j < n do
+            begin
+                if mxA < A[j] then
+                begin
+                    S := S + C[j];
+                    mxA := A[j];
+                end;
+                inc(j);
+            end;
+            if mxC < S then mxC := S;
         end;
     end;
-    writeln(fo, S);
-    close(fi);
-    close(fo);
-end.
+    writeln(mxC);
+
+    close(input);
+    close(output);
+END.
