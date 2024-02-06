@@ -1,19 +1,15 @@
 uses SysUtils;
-const MAXL = 6;
-      MAXLS = 7;
+const MAX = 7;
 type
-    vectorChar = array[0..MAXL] of char;
-    vectorBool = array[0..MAXL] of boolean;
-    vectorStr = array of vectorChar;
-
-var S: string[MAXLS];
-    sortedS: string[MAXLS];
-    A: vectorChar;
-    l: longword;
+    vectorBool = array[1..MAX] of boolean;
+    vectorStr = array of string; // DynArray
+var s: string;
+    origin: string;
+    curStr: string;
     B: vectorBool;
-    C: vectorStr;
-    isOrigin: boolean;
-    count: longword = 0;
+    list: vectorStr;
+    l: byte;
+    count: longint;
 
 procedure swap(var a, b: char);
 var temp: char;
@@ -23,93 +19,93 @@ begin
     b := temp;
 end;
 
-procedure sort(var S: string);
-var j, i: longword;
+procedure quicksort(var s: string; left, right: shortint);
+var pivot, i, j: shortint;
 begin
-    sortedS := S;
-    if length(S) < 2 then exit;
-    for j := 1 to l-1 do
-        for i := 1 to l-1 do
-            if ord(sortedS[i]) >= ord(sortedS[i+1]) then
-                swap(sortedS[i], sortedS[i+1]);
+    if left >= right then exit;
+    pivot := right;
+    i := left;
+    j := right-1;
+    while true do
+    begin
+        while s[i] < s[pivot] do inc(i);
+        while s[j] > s[pivot] do dec(j);
+        if i >= j then break;
+        swap(s[i], s[j]);
+    end;
+    swap(s[pivot], s[i]);
+    quicksort(s, left, i-1);
+    quicksort(s, i+1, right);
+end;
+procedure Add(var list: vectorStr; v: string);
+begin
+    setlength(list, length(list)+1);
+    list[length(list)-1] := v;
+end;
+function IsIn(v: string; list: vectorStr): boolean;
+var _: byte;
+begin
+    for _ := 0 to length(list)-1 do
+        if v = list[_] then exit(true);
+    exit(false);
 end;
 
 procedure init;
 begin
-    fillChar(A, sizeof(A), $0);
-    fillChar(B, sizeof(B), false);
-    l := length(S);
-    setlength(C, 2);
-    C[0] := S;
-    sort(S);
-    if S <> sortedS then
+    origin := s;
+    quicksort(s, 1, length(s));
+    setlength(list, 0);
+    Add(list, origin);
+    if s <> origin then
     begin
-        C[1] := sortedS;
-        inc(count);
+        Add(list, s);
     end;
+    curStr := s;
+    fillchar(B, sizeof(B), false);
+    l := length(s);
 end;
-procedure Add(str: vectorChar);
+procedure print(list: vectorStr);
+var _: byte;
 begin
-    setlength(C, length(C)+1);
-    C[length(C)-1] := str;
-end;
-function IsInC(var A: vectorChar): boolean; // is an array in C (a 2d array)
-var i, j: longword;
-begin
-    for i := 0 to length(C)-1 do
-    begin
-        IsInC := true;
-        for j := 0 to length(A)-1 do
-            if A[j] <> C[i][j] then IsInc := false;
-        if IsInC = true then exit;
-    end;
+    for _ := 1 to length(list)-1 do
+        writeln(list[_]);
 end;
 
-procedure try(i: longword);
-var j, k: longword;
+procedure try(i: byte);
+var j: byte;
 begin
     for j := 1 to l do
-        if not B[j-1] then
+    begin
+        if not B[j] then
         begin
-            A[i-1] := sortedS[j];
-            B[j-1] := true;
-            if (i = l) then
+            curStr[i] := s[j];
+            B[j] := true;
+            if i = l then
             begin
-                isOrigin := true;
-                for k := 0 to l-1 do
-                    if A[k] <> sortedS[k+1] then
-                    begin
-                        isOrigin := false;
-                        break;
-                    end;
-                if (not isOrigin) then
+                if not IsIn(curStr, list) then
                 begin
-                    if not IsInC(A) then
-                    begin
-                        for k := 0 to length(A)-1 do
-                            write(A[k]);
-                        writeln;
-                        Add(A);
-                        inc(count);
-                    end;
-
+                    Add(list, curStr);
                 end;
             end
             else
+            begin
                 try(i+1);
-            B[j-1] := false;
+            end;
+            B[j] := false;
         end;
-
+    end;
 end;
 
 BEGIN
     assign(input, 'bai3.inp'); reset(input);
     assign(output, 'bai3.out'); rewrite(output);
-    readln(S);
+    readln(s);
     init;
     try(1);
-    if count = 0 then writeln('Khong co hoan vi nao')
-    else writeln(format('Co tat ca %d hoan vi', [count]));
+    print(list);
+    count := length(list) - 1;
+    if count > 0 then writeln(format('Co tat ca %d hoan vi', [count]))
+    else writeln('Khong co hoan vi nao');
     close(input);
     close(output);
 END.
