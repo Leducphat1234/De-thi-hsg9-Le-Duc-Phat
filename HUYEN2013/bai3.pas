@@ -58,18 +58,14 @@ begin
     Add(list, origin);
     if s <> origin then
     begin
+        writeln(s);
         Add(list, s);
     end;
     curStr := s;
     fillchar(B, sizeof(B), false);
     l := length(s);
 end;
-procedure print(list: vectorStr);
-var _: byte;
-begin
-    for _ := 1 to length(list)-1 do
-        writeln(list[_]);
-end;
+
 
 procedure try(i: byte);
 var j: byte;
@@ -84,6 +80,7 @@ begin
             begin
                 if not IsIn(curStr, list) then
                 begin
+                    writeln(curStr);
                     Add(list, curStr);
                 end;
             end
@@ -102,7 +99,6 @@ BEGIN
     readln(s);
     init;
     try(1);
-    print(list);
     count := length(list) - 1;
     if count > 0 then writeln(format('Co tat ca %d hoan vi', [count]))
     else writeln('Khong co hoan vi nao');
