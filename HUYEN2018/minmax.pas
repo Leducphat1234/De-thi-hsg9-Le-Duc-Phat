@@ -9,16 +9,13 @@ begin
     assign(fo, 'minmax.out'); rewrite(fo);
     readln(fi, n);
     setlength(A, n);
-    for _ := 0 to length(A)-1 do
-    begin
-        readln(fi, A[_]);
-    end;
+    for _ := 0 to length(A)-1 do readln(fi, A[_]);
     
     mn:= high(qword);
     mx:= 0;
-    for i := 0 to length(A)-1 do
+    for i := 0 to n-1 do
     begin
-        for j := 0 to length(A)-1 do
+        for j := i+1 to n-1 do
         begin
             if i <> j then
             begin
