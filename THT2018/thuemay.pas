@@ -1,7 +1,7 @@
 uses SysUtils;
 type vector = array of longword;
 var n, _: longword;
-    A, B, C: vector; // D la khach da duyet va duoc chon
+    A, B, C: vector;
     S: qword = 0;
     blacklist: vector; // khach hang co so tien it hon se dua vao danh sach den
 
