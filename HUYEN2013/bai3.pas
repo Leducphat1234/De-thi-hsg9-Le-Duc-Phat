@@ -28,11 +28,11 @@ begin
     j := right-1;
     while true do
     begin
-        while s[i] < s[pivot] do
-            if i > left then inc(i)
+        while s[i] <= s[pivot] do
+            if i < right then inc(i)
             else break;
-        while s[j] > s[pivot] do
-            if j < right then dec(j)
+        while s[j] >= s[pivot] do
+            if j > left then dec(j)
             else break;
         if i >= j then break;
         swap(s[i], s[j]);
