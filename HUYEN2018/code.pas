@@ -12,7 +12,7 @@ begin
     while i <= length(s) do
     begin
         ch := copy(s, i, 3);
-        if trunc(StrToInt(ch)) > 128 then
+        if trunc(StrToInt(ch)) > 127 then
         begin
             ch := copy(s, i, 2);
             r := r + chr(trunc(StrToInt(ch)));
